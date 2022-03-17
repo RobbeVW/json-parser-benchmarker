@@ -3,6 +3,7 @@ package be.robbevw.jsonparser.benchmarks;
 import be.robbevw.jsonparser.models.Invoice;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
@@ -18,7 +19,8 @@ public class JsonParserBenchmark {
     @State(Scope.Benchmark)
     public static class TestData {
 
-        public File invoicesJson;
+        @Getter
+        private File invoicesJson;
 
         @Setup(Level.Trial)
         public void setup() {
