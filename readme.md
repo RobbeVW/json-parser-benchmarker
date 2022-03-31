@@ -1,8 +1,9 @@
 ## How to run this application
 - Ensure Docker is running
 - Open project in Intellij
-- Open docker-compose.yml in project root and boot up containers: ![image](https://user-images.githubusercontent.com/4882002/158885774-2864b41b-f5e0-4ae2-bfc4-5cee570d739f.png)
-- Application can now be started in Intellij
+- Open ```docker-compose.yml``` in project root and boot up containers: ![image](https://user-images.githubusercontent.com/4882002/158885774-2864b41b-f5e0-4ae2-bfc4-5cee570d739f.png)
+- Open ```BenchmarkRunner.java``` and press the play button: ![image](https://user-images.githubusercontent.com/4882002/161105149-623c49f3-b7a6-475f-ab1b-7480d2c42b87.png)
+
 
 # API endpoints
 The API exposes one endpoint, which takes a JSON body and saves it to your DB: ```POST /invoice```
