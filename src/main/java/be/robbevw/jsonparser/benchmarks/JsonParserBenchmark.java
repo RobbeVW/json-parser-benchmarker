@@ -15,14 +15,11 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class JsonParserBenchmark {
 
-    private String line;
-    private int max;
     private List<String> testData;
 
     @Setup
     public void setUp(){
         testData = getTestData();
-        max = testData.size();
     }
 
 
@@ -32,8 +29,7 @@ public class JsonParserBenchmark {
     @BenchmarkMode(Mode.All)
     public List<Invoice> init(){
         List<Invoice> invoices = new ArrayList<>();
-        for (int i = 0; i < max; i++){
-            line = testData.get(i);
+        for (String line : testData){
             invoices.add(jsonToInvoice(line));
         }
         return invoices;
