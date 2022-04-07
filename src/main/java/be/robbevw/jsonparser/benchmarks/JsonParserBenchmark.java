@@ -1,8 +1,6 @@
 package be.robbevw.jsonparser.benchmarks;
 
 import be.robbevw.jsonparser.models.Invoice;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.*;
 import org.openjdk.jmh.annotations.*;
 
@@ -35,11 +33,6 @@ public class JsonParserBenchmark {
             invoices.add(jsonToInvoice(line));
         }
         return invoices;
-        /**
-         * https://www.baeldung.com/java-microbenchmark-harness
-         * 6. Dead Code Elimination
-         * return List is omdat returnType VOID zorgt voor dat compiler gaat optimisen en dat beinvloedt het resultaat.
-         */
     }
 
     //JsonParser implementation
