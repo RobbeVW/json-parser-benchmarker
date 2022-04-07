@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 public class JsonParserBenchmark {
@@ -25,23 +24,61 @@ public class JsonParserBenchmark {
         testData = getTestData();
     }
 
-
+    /**
+     * https://www.baeldung.com/java-microbenchmark-harness
+     * 6. Dead Code Elimination
+     * return List bij Benchmarks is ivm invloed op test results..
+     * returnType VOID zorgt voor dat compiler gaat optimisen en dat beinvloedt het resultaat.
+     *
+     * Benchmarkmodes javadocs:
+     * http://javadox.com/org.openjdk.jmh/jmh-core/1.7/org/openjdk/jmh/annotations/Mode.html
+     * - Average time: average time per per operation.
+     * - Single shot time: measures the time for a single operation.
+     * - Throughput: operations per unit of time.
+     * - Sample time: samples the time for each operation.
+     */
     @Fork(value = 1, warmups = 1)
-    @Benchmark
-    @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    @BenchmarkMode(Mode.All)
-    public List<Invoice> init(){
+    @Benchmark()
+    @BenchmarkMode(Mode.AverageTime)
+    public List<Invoice> averageTime(){
         List<Invoice> invoices = new ArrayList<>();
         for (String line : testData){
             invoices.add(jsonToInvoice(line));
         }
         return invoices;
-        /**
-         * https://www.baeldung.com/java-microbenchmark-harness
-         * 6. Dead Code Elimination
-         * return List is ivm invloed op test results..
-         * returnType VOID zorgt voor dat compiler gaat optimisen en dat beinvloedt het resultaat.
-         */
+    }
+
+    @Fork(value = 1, warmups = 1)
+    @Benchmark
+    @BenchmarkMode(Mode.SingleShotTime)
+    public List<Invoice> singleShotTime() {
+        List<Invoice> invoices = new ArrayList<>();
+        for (String line : testData) {
+            invoices.add(jsonToInvoice(line));
+        }
+        return invoices;
+    }
+
+    @Fork(value = 1, warmups = 1)
+    @Benchmark
+    @BenchmarkMode(Mode.Throughput)
+    public List<Invoice> throughPut() {
+        List<Invoice> invoices = new ArrayList<>();
+        for (String line : testData) {
+            invoices.add(jsonToInvoice(line));
+        }
+        return invoices;
+    }
+
+    @Fork(value = 1, warmups = 1)
+    @Benchmark
+    @BenchmarkMode(Mode.SampleTime)
+    public List<Invoice> sampleTime() {
+        List<Invoice> invoices = new ArrayList<>();
+        for (String line : testData) {
+            invoices.add(jsonToInvoice(line));
+        }
+        return invoices;
     }
 
     //JsonParser implementation
