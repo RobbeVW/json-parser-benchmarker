@@ -1,6 +1,8 @@
 package be.robbevw.jsonparser.benchmarks;
 
 import be.robbevw.jsonparser.models.Invoice;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.*;
 import org.openjdk.jmh.annotations.*;
 
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class JsonParserBenchmark {
 
     private List<String> testData;
+    private final ObjectMapper mapper = new ObjectMapper(); //jackson
 
     @Setup
     public void setUp(){
@@ -36,19 +39,27 @@ public class JsonParserBenchmark {
         /**
          * https://www.baeldung.com/java-microbenchmark-harness
          * 6. Dead Code Elimination
-         * return List is omdat returnType VOID zorgt voor dat compiler gaat optimisen en dat beinvloedt het resultaat.
+         * return List is ivm invloed op test results..
+         * returnType VOID zorgt voor dat compiler gaat optimisen en dat beinvloedt het resultaat.
          */
     }
 
     //JsonParser implementation
     private Invoice jsonToInvoice(String line) {
-        //json-java
-        JSONObject json = new JSONObject(line);
         Invoice invoice = new Invoice();
 
-        invoice.setTotalAmount(json.getBigDecimal("totalAmount"));
-        invoice.setCompanyName(json.getString("companyName"));
-        invoice.setComment(json.getString("comment"));
+        //json-java
+        JSONObject jsonObject = new JSONObject(line);
+        invoice.setTotalAmount(jsonObject.getBigDecimal("totalAmount"));
+        invoice.setCompanyName(jsonObject.getString("companyName"));
+        invoice.setComment(jsonObject.getString("comment"));
+
+        //jackson
+        try {
+            mapper.readValue(line, Invoice.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         return invoice;
     }
