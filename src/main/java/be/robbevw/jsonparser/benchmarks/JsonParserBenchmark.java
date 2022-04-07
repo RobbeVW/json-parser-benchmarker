@@ -1,68 +1,73 @@
 package be.robbevw.jsonparser.benchmarks;
 
 import be.robbevw.jsonparser.models.Invoice;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.*;
-import lombok.Getter;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Level;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+@State(Scope.Benchmark)
 public class JsonParserBenchmark {
 
-    @State(Scope.Benchmark)
-    public static class TestData {
+    private List<String> testData;
 
-        @Getter
-        private Path invoicesJson;
-
-        @Setup(Level.Trial)
-        public void setup() {
-            invoicesJson = Paths.get("src/main/resources/MOCK_DATA.json");
-        }
+    @Setup
+    public void setUp(){
+        testData = getTestData();
     }
 
-    @State(Scope.Benchmark)
-    public static class BenchmarkedObjectMapper {
-        public List<Invoice> readValue(Path file) throws IOException {
-            List<Invoice> invoices = new ArrayList<>();
-            JSONObject jsonObject;
 
-            BufferedReader reader = Files.newBufferedReader(file);
+    @Fork(value = 1, warmups = 1)
+    @Benchmark
+    @OutputTimeUnit(TimeUnit.MILLISECONDS)
+    @BenchmarkMode(Mode.All)
+    public List<Invoice> init(){
+        List<Invoice> invoices = new ArrayList<>();
+        for (String line : testData){
+            invoices.add(jsonToInvoice(line));
+        }
+        return invoices;
+        /**
+         * https://www.baeldung.com/java-microbenchmark-harness
+         * 6. Dead Code Elimination
+         * return List is omdat returnType VOID zorgt voor dat compiler gaat optimisen en dat beinvloedt het resultaat.
+         */
+    }
+
+    //JsonParser implementation
+    private Invoice jsonToInvoice(String line){
+        //json-java
+        JSONObject json = new JSONObject(line);
+        Invoice invoice = new Invoice();
+
+        invoice.setTotalAmount(json.getBigDecimal("totalAmount"));
+        invoice.setCompanyName(json.getString("companyName"));
+        invoice.setComment(json.getString("comment"));
+
+        return invoice;
+    }
+
+    //#region helper method
+    public List<String> getTestData() {
+        List<String> testData = new ArrayList<>();
+
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get("src/main/resources/MOCK_DATA.json"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                jsonObject = new JSONObject(line);
-                invoices.add(jsonToInvoice(jsonObject));
+                testData.add(line);
             }
-            return invoices;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        //helper method
-        private Invoice jsonToInvoice(JSONObject json) {
-            Invoice invoice = new Invoice();
-            invoice.setTotalAmount(json.getBigDecimal("totalAmount"));
-            invoice.setCompanyName(json.getString("companyName"));
-            invoice.setComment(json.getString("comment"));
-//            invoice.setComment("hello it's me");
-            return invoice;
-        }
-
-        public List<Invoice> init(BenchmarkedObjectMapper objectMapper, TestData testData) throws IOException {
-            return objectMapper.readValue(testData.invoicesJson);
-        }
+        return testData;
     }
-
-    @Benchmark
-    public List<Invoice> init(BenchmarkedObjectMapper objectMapper, TestData testData) throws IOException {
-        return objectMapper.readValue(testData.invoicesJson);
-    }
+//#endregion
 }
