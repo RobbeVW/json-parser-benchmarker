@@ -1,9 +1,7 @@
 package be.robbevw.jsonparser.benchmarks;
 
 import be.robbevw.jsonparser.models.Invoice;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.*;
+import com.google.gson.Gson;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.BufferedReader;
@@ -17,7 +15,7 @@ import java.util.List;
 public class JsonParserBenchmark {
 
     private List<String> testData;
-    private final ObjectMapper mapper = new ObjectMapper(); //jackson
+    private final Gson gson = new Gson();
 
     @Setup
     public void setUp(){
@@ -83,22 +81,7 @@ public class JsonParserBenchmark {
 
     //JsonParser implementation
     private Invoice jsonToInvoice(String line) {
-        Invoice invoice = new Invoice();
-
-        //json-java
-        JSONObject jsonObject = new JSONObject(line);
-        invoice.setTotalAmount(jsonObject.getBigDecimal("totalAmount"));
-        invoice.setCompanyName(jsonObject.getString("companyName"));
-        invoice.setComment(jsonObject.getString("comment"));
-
-        //jackson
-        try {
-            mapper.readValue(line, Invoice.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return invoice;
+        return gson.fromJson(line, Invoice.class);
     }
 
     //#region helper method
@@ -107,8 +90,12 @@ public class JsonParserBenchmark {
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get("src/main/resources/MOCK_DATA.json"))) {
             String line;
+            int counter = 0;
             while ((line = reader.readLine()) != null) {
+                counter++;
+                if (counter != 1000) { line = line.substring(0, line.length() -1); }
                 testData.add(line);
+
             }
         } catch (IOException e) {
             e.printStackTrace();
