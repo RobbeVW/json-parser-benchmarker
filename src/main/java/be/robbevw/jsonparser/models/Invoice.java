@@ -2,6 +2,7 @@ package be.robbevw.jsonparser.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 
 @Entity
 public class Invoice {
