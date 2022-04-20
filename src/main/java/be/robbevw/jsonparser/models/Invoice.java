@@ -27,6 +27,6 @@ public class Invoice {
 
     private String companyName;
 
-    @Column(length = 5000)
+    @Column(length = 15000)
     private String comment;
 }

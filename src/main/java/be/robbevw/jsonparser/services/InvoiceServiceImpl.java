@@ -7,6 +7,9 @@ import be.robbevw.jsonparser.repositories.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 
 @Service
@@ -22,5 +25,14 @@ public final class InvoiceServiceImpl implements InvoiceService {
         final Invoice parsedInvoice = jsonParser.jsonToInvoice(jsonInvoice);
 
         invoiceRepository.save(parsedInvoice);
+    }
+
+    public List<Invoice> findAll() {
+        return invoiceRepository.findAll();
+    }
+
+    @Override
+    public Optional<Invoice> findById(Long id) {
+        return invoiceRepository.findById(id);
     }
 }

@@ -1,8 +1,7 @@
 package be.robbevw.jsonparser.benchmarks;
 
 import be.robbevw.jsonparser.models.Invoice;
-import be.robbevw.jsonparser.parsers.JsonParser;
-import be.robbevw.jsonparser.parsers.JsonSimpleParser;
+import be.robbevw.jsonparser.parsers.*;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -27,7 +26,11 @@ public class JsonParserBenchmark {
     public static final String SOURCE_MOCK_JSON_DATA_LARGE = "src/main/resources/invoices/MockInvoicesLarge.json";
 
     // Replace this instance with your desired parser
-    private final JsonParser jsonParser = new JsonSimpleParser();
+//    private final JsonParser jsonParser = new JacksonParser();
+//    private final JsonParser jsonParser = new GsonParser();
+//    private final JsonParser jsonParser = new JsonSimpleParser();
+//    private final JsonParser jsonParser = new FastJsonParser();
+    private final JsonParser jsonParser = new JsonJavaParser();
 
     private List<String> testData;
 
