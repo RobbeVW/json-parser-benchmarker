@@ -9,4 +9,9 @@ public class FastJsonParser implements JsonParser {
     public Invoice jsonToInvoice(String jsonLine) {
         return JSON.parseObject(jsonLine, Invoice.class);
     }
+
+    @Override
+    public String invoiceToJson(Invoice invoice) {
+        return JSON.toJSONString(invoice);
+    }
 }

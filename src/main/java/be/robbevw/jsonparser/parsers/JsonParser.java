@@ -5,4 +5,6 @@ import be.robbevw.jsonparser.models.Invoice;
 public interface JsonParser {
 
     Invoice jsonToInvoice(String jsonLine);
+
+    String invoiceToJson(Invoice invoice);
 }

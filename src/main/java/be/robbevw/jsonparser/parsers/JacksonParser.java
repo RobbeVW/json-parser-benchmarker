@@ -18,4 +18,14 @@ public class JacksonParser implements JsonParser {
 
         return null;
     }
+
+    @Override
+    public String invoiceToJson(Invoice invoice) {
+        try {
+            return objectMapper.writeValueAsString(invoice);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

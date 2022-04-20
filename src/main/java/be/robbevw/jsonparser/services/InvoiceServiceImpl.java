@@ -1,8 +1,7 @@
 package be.robbevw.jsonparser.services;
 
 import be.robbevw.jsonparser.models.Invoice;
-import be.robbevw.jsonparser.parsers.JsonParser;
-import be.robbevw.jsonparser.parsers.JsonSimpleParser;
+import be.robbevw.jsonparser.parsers.*;
 import be.robbevw.jsonparser.repositories.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,11 @@ import java.util.Optional;
 public final class InvoiceServiceImpl implements InvoiceService {
 
     // Replace this instance with your desired parser
-    private final JsonParser jsonParser = new JsonSimpleParser();
+//    private final JsonParser jsonParser = new JacksonParser();
+//    private final JsonParser jsonParser = new GsonParser();
+//    private final JsonParser jsonParser = new JsonSimpleParser();
+//    private final JsonParser jsonParser = new FastJsonParser();
+    private final JsonParser jsonParser = new JsonJavaParser();
 
     private final InvoiceRepository invoiceRepository;
 
@@ -27,12 +30,13 @@ public final class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.save(parsedInvoice);
     }
 
-    public List<Invoice> findAll() {
-        return invoiceRepository.findAll();
-    }
+    public Optional<String> getById(Long id) {
+        Optional<Invoice> invoice =  invoiceRepository.findById(id);
 
-    @Override
-    public Optional<Invoice> findById(Long id) {
-        return invoiceRepository.findById(id);
+        if (invoice.isPresent()){
+            String json = jsonParser.invoiceToJson(invoice.get());
+            return Optional.of(json);
+        }
+        return Optional.empty();
     }
 }

@@ -14,4 +14,9 @@ public class JsonJavaParser implements JsonParser {
             .setCompanyName(jsonObject.getString("companyName"))
             .setComment(jsonObject.getString("comment"));
     }
+
+    @Override
+    public String invoiceToJson(Invoice invoice) {
+        return new JSONObject(invoice).toString();
+    }
 }

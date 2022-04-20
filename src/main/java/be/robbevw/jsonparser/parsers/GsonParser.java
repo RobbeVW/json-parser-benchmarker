@@ -11,4 +11,9 @@ public class GsonParser implements JsonParser {
     public Invoice jsonToInvoice(String jsonLine) {
         return gson.fromJson(jsonLine, Invoice.class);
     }
+
+    @Override
+    public String invoiceToJson(Invoice invoice) {
+        return gson.toJson(invoice);
+    }
 }
