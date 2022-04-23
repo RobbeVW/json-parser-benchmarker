@@ -4,12 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +24,7 @@ public class Invoice {
 
     private String companyName;
 
-    @Column(length = 15000)
-    private String comment;
+    @ElementCollection()
+    @Column(length=500000)
+    private List<String> comment;
 }

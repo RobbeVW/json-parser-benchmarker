@@ -83,7 +83,7 @@ public class JsonParserBenchmark {
 
     //#region helper method
     private void populateTestData() {
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(SOURCE_MOCK_JSON_DATA_SMALL))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(SOURCE_MOCK_JSON_DATA_LARGE))) {
             reader.lines().map(removeTrailingComma()).forEach(testData::add);
         } catch (IOException e) {
             e.printStackTrace();

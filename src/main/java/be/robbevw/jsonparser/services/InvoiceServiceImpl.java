@@ -16,10 +16,10 @@ public final class InvoiceServiceImpl implements InvoiceService {
 
     // Replace this instance with your desired parser
 //    private final JsonParser jsonParser = new JacksonParser();
-//    private final JsonParser jsonParser = new GsonParser();
+    private final JsonParser jsonParser = new GsonParser();
 //    private final JsonParser jsonParser = new JsonSimpleParser();
 //    private final JsonParser jsonParser = new FastJsonParser();
-    private final JsonParser jsonParser = new JsonJavaParser();
+//    private final JsonParser jsonParser = new JsonJavaParser();
 
     private final InvoiceRepository invoiceRepository;
 
